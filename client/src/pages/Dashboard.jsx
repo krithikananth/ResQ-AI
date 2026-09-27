@@ -1018,6 +1018,21 @@ const NGOView = ({ donations = [], userRole, loading }) => {
                         </div>
                       </div>
 
+                      <div className="flex justify-between items-center mb-3">
+                        <div className="text-xs text-gray-500">
+                          📅 Posted {new Date(donation.createdAt || Date.now()).toLocaleString('en-IN', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          🆔 ID: {(donation._id || donation.id || '').slice(-6)}
+                        </div>
+                      </div>
+
                       <button 
                         onClick={() => handleRequestPickup(donation._id || donation.id)}
                         className="btn btn-primary w-full"
@@ -1148,12 +1163,11 @@ const VolunteerView = ({ user, donations = [], loading }) => {
   };
 
   const getUrgencyColor = (urgency) => {
-    switch (urgency) {
-      case 'high': return 'text-red-600';
-      case 'medium': return 'text-orange-600';
-      case 'low': return 'text-green-600';
-      default: return 'text-gray-600';
-    }
+    const urgencyLower = (urgency || '').toLowerCase();
+    if (urgencyLower.includes('high')) return 'text-red-600';
+    if (urgencyLower.includes('medium')) return 'text-orange-600';
+    if (urgencyLower.includes('low')) return 'text-green-600';
+    return 'text-gray-600';
   };
 
   return (
@@ -1236,6 +1250,7 @@ const VolunteerView = ({ user, donations = [], loading }) => {
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <div className="space-y-2">
+                        <div><strong>Food Name:</strong> {pickup.foodName || pickup.donationType}</div>
                         <div><strong>Quantity:</strong> {pickup.quantity}</div>
                         <div><strong>Pickup:</strong> {pickup.pickupLocation}</div>
                         <div><strong>Delivery:</strong> {pickup.deliveryLocation}</div>
@@ -1243,13 +1258,26 @@ const VolunteerView = ({ user, donations = [], loading }) => {
                       <div className="space-y-2">
                         <div><strong>Distance:</strong> {pickup.distance}</div>
                         <div><strong>Est. Time:</strong> {pickup.estimatedTime}</div>
-                        <div><strong>Expiry:</strong> <span className={pickup.urgency === 'high' ? 'text-red-600 font-semibold' : ''}>{pickup.expiryTime}</span></div>
+                        <div><strong>Expiry:</strong> <span className={pickup.urgency === 'HIGH PRIORITY' ? 'text-red-600 font-semibold' : ''}>{pickup.expiryTime}</span></div>
+                        <div><strong>Posted:</strong> {new Date(pickup.donationData?.createdAt || Date.now()).toLocaleString('en-IN', {
+                          day: 'numeric',
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}</div>
                       </div>
                     </div>
 
+                    {pickup.donationData?.description && (
+                      <div className="mt-3 p-2 bg-gray-50 rounded">
+                        <strong className="text-xs text-gray-700">Description:</strong>
+                        <p className="text-sm text-gray-600 mt-1">{pickup.donationData.description}</p>
+                      </div>
+                    )}
+
                     <div className="mt-3 pt-3 border-t">
                       <div className="flex justify-between text-xs text-gray-600">
-                        <span><strong>Donor:</strong> {pickup.donorContact}</span>
+                        <span><strong>Donor:</strong> {pickup.donorContact} {pickup.donorPhone && `(${pickup.donorPhone})`}</span>
                         <span><strong>NGO:</strong> {pickup.ngoContact}</span>
                       </div>
                     </div>

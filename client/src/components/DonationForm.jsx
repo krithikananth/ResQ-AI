@@ -3,6 +3,7 @@ import { useState } from 'react';
 const DonationForm = ({ onSubmit, loading }) => {
   const [formData, setFormData] = useState({
     foodName: '',
+    description: '', // ADDED: Description field
     foodType: 'cooked',
     quantity: '',
     unit: 'kg',
@@ -92,6 +93,7 @@ const DonationForm = ({ onSubmit, loading }) => {
       // Reset form
       setFormData({
         foodName: '',
+        description: '', // ADDED
         foodType: 'cooked',
         quantity: '',
         unit: 'kg',
@@ -169,6 +171,26 @@ const DonationForm = ({ onSubmit, loading }) => {
               <option value="other">Other</option>
             </select>
           </div>
+        </div>
+
+        {/* Description Field */}
+        <div>
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+            Description *
+          </label>
+          <textarea
+            name="description"
+            required
+            rows="3"
+            className="form-input mt-1"
+            placeholder="Describe the food item, ingredients, any special notes..."
+            value={formData.description}
+            onChange={handleChange}
+          />
+        </div>
+
+        {/* Quantity and Units */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           <div>
             <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">
