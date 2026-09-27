@@ -14,6 +14,7 @@ router.post('/', verifyToken, requireRole('donor'), async (req, res) => {
     const {
       foodType,
       foodName,
+      description,
       quantity,
       unit,
       prepTime,
@@ -23,13 +24,14 @@ router.post('/', verifyToken, requireRole('donor'), async (req, res) => {
       contactPerson,
       contactPhone,
       pickupInstructions,
-      urgencyLevel
+      urgencyLevel,
+      deliveryMethod
     } = req.body;
 
     // Validation
-    if (!foodType || !foodName || !quantity || !unit || !prepTime || !storageTemp || !location) {
+    if (!foodType || !foodName || !description || !quantity || !unit || !prepTime || !storageTemp || !location) {
       return res.status(400).json({
-        error: 'Missing required fields: foodType, foodName, quantity, unit, prepTime, storageTemp, location'
+        error: 'Missing required fields: foodType, foodName, description, quantity, unit, prepTime, storageTemp, location'
       });
     }
 
@@ -48,6 +50,7 @@ router.post('/', verifyToken, requireRole('donor'), async (req, res) => {
       donorId: req.user._id,
       foodType,
       foodName,
+      description,
       quantity: parseFloat(quantity),
       unit,
       prepTime: new Date(prepTime),
@@ -58,7 +61,8 @@ router.post('/', verifyToken, requireRole('donor'), async (req, res) => {
       contactPerson: contactPerson || req.user.name,
       contactPhone: contactPhone || req.user.phone,
       pickupInstructions,
-      urgencyLevel: urgencyLevel || calculateUrgencyLevel(shelfLifeHours)
+      urgencyLevel: urgencyLevel || calculateUrgencyLevel(shelfLifeHours),
+      deliveryMethod: deliveryMethod || 'volunteer_pickup'
     });
 
     await donation.save();

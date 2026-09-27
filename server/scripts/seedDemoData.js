@@ -217,6 +217,7 @@ function generateDonations(donorIds) {
       donorId: donorId,
       foodType: food.type,
       foodName: food.name,
+      description: `Fresh ${food.name.toLowerCase()} prepared ${Math.floor(Math.random() * 3)} hours ago. ${food.type === 'cooked' ? 'Hot and ready to serve.' : 'Well-packaged and stored properly.'} ${food.unit === 'kg' ? 'Sufficient for group serving.' : 'Individual portions available.'}`,
       quantity: food.quantity,
       unit: food.unit,
       prepTime: prepTime,
@@ -238,7 +239,8 @@ function generateDonations(donorIds) {
       contactPerson: 'Manager',
       contactPhone: '+91 9876543210',
       pickupInstructions: 'Please contact before arrival. Available at reception.',
-      urgencyLevel: urgency
+      urgencyLevel: urgency,
+      deliveryMethod: 'volunteer_pickup'
     });
   }
 
